@@ -1,0 +1,38 @@
+{
+  "name": "recipes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prod": "MONGODB_URI='mongodb+srv://recipes:<password>@cluster0.ywixl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' nodemon src/index.ts --exec ts-node",
+    "dev": "MONGODB_URI='mongodb+srv://recipes:<password>@cluster0.ywixl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' nodemon src/index.ts --exec ts-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidRiosAlex/recipes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DavidRiosAlex/recipes/issues"
+  },
+  "homepage": "https://github.com/DavidRiosAlex/recipes#readme",
+  "dependencies": {
+    "apollo-server-express": "^3.0.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.5",
+    "reflect-metadata": "^0.1.13",
+    "require-all": "^3.0.0",
+    "type-graphql": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/node": "^16.4.6",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
+}

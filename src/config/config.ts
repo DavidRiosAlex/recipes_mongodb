@@ -1,0 +1,1 @@
+export const SECRET_USER_JWT = 'bb286b35d92318-10291a99a55ff1-6c9f5c4c21d05b-a4be9d1a2d03f6';
