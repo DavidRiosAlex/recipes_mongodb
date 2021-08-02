@@ -18,6 +18,10 @@ class UserGraph {
     email: string;
     @Field()
     password: string;
+    @Field()
+    _id: string;
+    @Field( () => [String] )
+    recipes: string[];
 }
 
 const SchemaUser = new Schema<User>({
@@ -25,7 +29,8 @@ const SchemaUser = new Schema<User>({
     lastName: { type: String, default: '' },
     email: { type: String, unique: true },
     password: { type: String, default: '' },
-    recipes: { type: [Types.ObjectId], default: [] }
+    secret: { type: String, default: '' },
+    recipes: { type: [Types.ObjectId], ref: 'Recipe', default: [] }
 })
 
 const UserModel = model('User', SchemaUser);

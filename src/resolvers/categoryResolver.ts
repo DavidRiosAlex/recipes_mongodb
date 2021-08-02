@@ -6,6 +6,7 @@ import {
     Field,
     InputType,
 } from 'type-graphql';
+import auth from '../helpers/auth';
 import { Category } from '../entity';
 
 const { CategoryGraph, CategoryModel } = Category;
@@ -13,6 +14,8 @@ const { CategoryGraph, CategoryModel } = Category;
 class CategoryInput {
     @Field()
     name!: string
+    @Field(() => String)
+    description!: string;
 }
 
 @Resolver()
@@ -22,47 +25,54 @@ export class CategoryResolver{
         @Arg('token', () => String) token: string,
         @Arg('data', () => CategoryInput) data: CategoryInput
     ){
+        auth(token);
         const newCategory = await CategoryModel.create(data);
         return newCategory
     }
 
-    @Query(()=> [Category])
+    @Query(()=> [CategoryGraph])
     getCategories(
         @Arg('token', () => String) token: string,
     ){
-
+        auth(token);
         return CategoryModel.find()
     }
 
     @Query(()=> CategoryGraph)
     getOneCategories(
         @Arg('token', () => String) token: string,
-        @Arg('name', () => String) name: string
+        @Arg('_id', () => String) _id: string
     ){
-        return CategoryModel.findOne({ name })
+        auth(token);
+        return CategoryModel.findOne({ _id })
     }
 
     @Mutation(() => Boolean)
     async updateCategory(
         @Arg('token', () => String) token: string,
-        @Arg('name', () => String) name: string,
-        @Arg('data', () => CategoryInput) data: typeof CategoryGraph
+        @Arg('_id', () => String) _id: string,
+        @Arg('data', () => CategoryInput) data: CategoryInput
     ){
-        const category = await CategoryModel.findOne({ name });
+        auth(token);
+        const category = await CategoryModel.findOne({ _id });
+        console.log(category);
         if (!category) return new Error('category not found');
         category.name = data.name;
+        if (data.name) category.name = data.name;
+        if (data.description) category.description = data.description;
         await category.save();
-        return category
+        return true
     }
 
     @Mutation(() => Boolean)
     async deleteCategory(
         @Arg('token', () => String ) token: string,
-        @Arg('name', () => String ) name: string
+        @Arg('_id', () => String ) _id: string
     ){
-        const category = await CategoryModel.findOne({ name });
+        auth(token);
+        const category = await CategoryModel.findOne({ _id });
         if (!category) return new Error('category not found');
-        await CategoryModel.deleteOne({ name });
+        await CategoryModel.deleteOne({ _id });
         return true
     }
 }

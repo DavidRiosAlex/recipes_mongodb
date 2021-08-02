@@ -2,8 +2,15 @@ import jwt from 'jsonwebtoken';
 import { SECRET_USER_JWT } from '../config/config';
 import { User } from '../entity';
 
+const { UserGraph } = User;
 interface tokenInterface {
-    data: User,
+    data: {
+        name: string,
+        lastName: string,
+        password: string,
+        email: string,
+        _id: string,
+    },
     type: 'access',
     entity: 'user',
     exp: number,

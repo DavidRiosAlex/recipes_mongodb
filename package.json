@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prod": "MONGODB_URI='mongodb+srv://recipes:<password>@cluster0.ywixl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' nodemon src/index.ts --exec ts-node",
-    "dev": "MONGODB_URI='mongodb+srv://recipes:<password>@cluster0.ywixl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' nodemon src/index.ts --exec ts-node"
+    "prod": "MONGODB_URI='mongodb+srv://recipes:recipes@cluster0.ywixl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' nodemon src/index.ts --exec ts-node",
+    "dev": "MONGODB_URI='mongodb+srv://recipes:recipes@cluster0.ywixl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' nodemon src/index.ts --exec ts-node"
   },
   "repository": {
     "type": "git",

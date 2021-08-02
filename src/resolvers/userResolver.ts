@@ -5,22 +5,39 @@ import {
     Arg,
     Field,
     InputType,
-    Int
+    ObjectType
 } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import { createHmac, randomBytes } from 'crypto';
-import { User } from '../entity';
+import { User, Recipe } from '../entity';
 import { SECRET_USER_JWT } from '../config/config';
 import verifiedToken from '../helpers/auth'; 
 
+const { UserModel, UserGraph } = User;
+const { RecipeGraph } = Recipe;
 @InputType()
 class UserInput {
     @Field()
     name!: string
     @Field()
+    lastName!: string
+    @Field()
     password!: string
     @Field()
     email!: string
+}
+
+@InputType()
+@ObjectType()
+class UserOutput {
+    @Field()
+    name!: string
+    @Field()
+    lastName!: string
+    @Field()
+    email!: string
+    @Field(() => [RecipeGraph])
+    recipes: typeof RecipeGraph[];
 }
 
 @InputType()
@@ -35,12 +52,12 @@ class UserQuery {
 export class UserResolver{
 
 
-    @Mutation(() => User)
+    @Mutation(() => UserGraph)
 
     async signUp(
         @Arg('data', () => UserInput) data: UserInput
     ){
-        const userAlreadyExist = await User.findOne({
+        const userAlreadyExist = await UserModel.findOne({
             email: data.email
         });
 
@@ -54,8 +71,7 @@ export class UserResolver{
             ...data,
             secret,
         };
-        const newUser = await User.create(userData);
-        await newUser.save();
+        const newUser = await UserModel.create(userData);
 
         return newUser
     }
@@ -65,7 +81,7 @@ export class UserResolver{
         @Arg('email', () => String) email: string,
         @Arg('password', () => String) password: string,
     ){
-        const user = await User.findOne({ email });
+        const user = await UserModel.findOne({ email });
 
         if (!user) return new Error('user not found');
         const hashedPassword = createHmac('sha256', user.secret ).update(password).digest('hex');
@@ -82,12 +98,24 @@ export class UserResolver{
         return jsonwebtoken
     }
 
-    @Query(()=>[User])
-    users(
+    @Query(()=>[UserOutput])
+    async getUsers(
         @Arg('token', () => String) token: string,
         @Arg('query', () => UserQuery, { nullable: true }) query: UserQuery,
     ){
         verifiedToken(token);
-        return User.find()
-    }   
+        const users = await UserModel.find().populate('recipes');
+console.log(JSON.stringify(users[0], null, 2));
+        return users;
+    }
+
+    @Mutation(()=>Boolean)
+    async deleteUser(
+        @Arg('token', () => String) token: string,
+        @Arg('_id', () => String) _id: String,
+    ){
+        verifiedToken(token);
+        await UserModel.deleteOne({ _id })
+        return true
+    }  
 }

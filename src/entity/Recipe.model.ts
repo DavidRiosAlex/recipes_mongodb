@@ -10,21 +10,23 @@ interface Recipe {
 
 @ObjectType()
 class RecipeGraph {
-    @Field()
+    @Field({ nullable: true })
     name: string;
-    @Field()
+    @Field({ nullable: true })
     description: string;
-    @Field()
+    @Field(()=>[String], { nullable: true })
     ingredients: string[];
-    @Field()
+    @Field({ nullable: true })
     category: string;
+    @Field()
+    _id: string;
 }
 
 const SchemaRecipe = new Schema<Recipe>({
     name: { type: String, unique: true },
     description: { type: String, default: '' },
-    ingredients: { type: [Types.ObjectId], default: null },
-    category: { type: Types.ObjectId, default: null },
+    ingredients: { type: [Types.ObjectId], ref: 'Ingredient', default: null },
+    category: { type: Types.ObjectId, ref: 'Category', default: null },
 })
 
 const RecipeModel = model('Recipe', SchemaRecipe);

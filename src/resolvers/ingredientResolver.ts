@@ -21,7 +21,7 @@ class IngredientInput {
 
 @Resolver()
 export class IngredientResolver{
-    @Mutation(() => IngredientModel)
+    @Mutation(() => IngredientGraph)
     async createIngredient(
         @Arg('token', () => String) token: string,
         @Arg('data', () => IngredientInput) data: IngredientInput
@@ -33,14 +33,14 @@ export class IngredientResolver{
     @Mutation(() => Boolean)
     async deleteIngredient(
         @Arg('token', () => String) token: string,
-        @Arg('name', () => Int) name: string
+        @Arg('_id', () => String) _id: string
     ){
         auth(token);
-        await IngredientModel.deleteOne({ name });
+        await IngredientModel.deleteOne({ _id });
         return true 
     }
 
-    @Query(()=>[IngredientModel])
+    @Query(()=>[IngredientGraph])
     getIngredient(
         @Arg('token', () => String) token
     ){
@@ -48,23 +48,23 @@ export class IngredientResolver{
         return IngredientModel.find()
     }
 
-    @Query(()=>IngredientModel)
+    @Query(()=>IngredientGraph)
     getOneIngredient(
         @Arg('token', () => String) token: string,
-        @Arg('name', () => String, { nullable: true }) name: string
+        @Arg('_id', () => String, { nullable: true }) _id: string
     ){
         auth(token);
-        return IngredientModel.findOne({ name });
+        return IngredientModel.findOne({ _id });
     }
 
     @Mutation(() => Boolean)
     async updateIngredient(
-        @Arg('id', () => Int ) id: number,
+        @Arg('_id', () => String ) _id: string,
         @Arg('ingredient', () => IngredientInput) ingredient: IngredientInput,
         @Arg('token', () => String) token: string
     ){
         auth(token);
-        await IngredientModel.updateOne({_id: id }, { $set: { id, ingredient} });
+        await IngredientModel.updateOne({ _id }, { $set: { ...ingredient } });
         return true
     }
 }

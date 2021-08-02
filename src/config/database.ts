@@ -13,7 +13,7 @@ const {
 } = process.env;
 
 requireAll({
-    dirname: `${__dirname}/entity`,
+    dirname: `${__dirname}/../entity`,
     filter: /\.model\.js$/,
 });
 export default async () => {
