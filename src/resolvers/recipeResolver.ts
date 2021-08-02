@@ -85,7 +85,7 @@ export class RecipeResolver{
             .populate('ingredients')
             .populate('category')
             .populate('recipes');
-        console.log(JSON.stringify(recipes[0]));
+        
         return recipes
     }
 
